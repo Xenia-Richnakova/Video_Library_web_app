@@ -1,0 +1,67 @@
+{
+  "videosList": [
+    {
+      "name": "React for the haters in 100 seconds",
+      "genre": "Programming",
+      "link": "https://www.youtube.com/watch?v=HyWYpM_S-2c",
+      "language": "English",
+      "id": "18146c39-db3b-4a0e-95bf-9fcaef8a79d0"
+    },
+    {
+      "name": "Learn React",
+      "genre": "Programming",
+      "link": "https://www.youtube.com/watch?v=bMknfKXIFA8",
+      "language": "English",
+      "id": "39146a0b-a1f4-47c3-bfbb-e453d00ddd38"
+    },
+    {
+      "name": "React in 100 seconds",
+      "genre": "Programming",
+      "link": "https://www.youtube.com/watch?v=Tn6-PIqc4UM",
+      "language": "English",
+      "id": "9384157c-9ac4-4415-85c4-c2312ed4dcef"
+    },
+    {
+      "name": "TypeScript in 100 seconds",
+      "genre": "Programming",
+      "link": "https://www.youtube.com/watch?v=zQnBQ4tB3ZA",
+      "language": "English",
+      "id": "844a3260-af3f-4675-a304-9909f32a2c5e"
+    },
+    {
+      "name": "Phil Collins - In The Air Tonight",
+      "genre": "Music",
+      "link": "https://www.youtube.com/watch?v=YkADj0TPrJA",
+      "language": "English",
+      "id": "e0295743-7eb8-4d7f-ab9e-b6ce65c76b84"
+    },
+    {
+      "name": "a-ha - Take On Me",
+      "genre": "Music",
+      "link": "https://www.youtube.com/watch?v=djV11Xbc914",
+      "language": "English",
+      "id": "cc5a22cf-3f52-467a-85e6-cce8b7579586"
+    },
+    {
+      "name": "Can I make 100$ a day?",
+      "genre": "Action",
+      "link": "https://www.youtube.com/watch?v=5Qk4RullVPw",
+      "language": "English",
+      "id": "5eb42f88-4810-42a4-9755-dc385f3022a7"
+    },
+    {
+      "name": "David Černý - Etika a etiky umělé inteligence",
+      "genre": "Tech",
+      "link": "https://www.youtube.com/watch?v=wGtTUSaRgAk",
+      "language": "Czech",
+      "id": "e692e734-bdac-42a8-aea0-31d2fa138fac"
+    },
+    {
+      "name": "The 5 core principles of life",
+      "genre": "Learning",
+      "link": "https://www.youtube.com/watch?v=5EwVBC3VsRA",
+      "language": "English",
+      "id": "9ef5f943-47f6-4d26-b865-505073abe435"
+    }
+  ]
+}
