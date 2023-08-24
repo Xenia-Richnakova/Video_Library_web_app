@@ -21,6 +21,22 @@ app.get('/api/videos', (req, res) => {
     })
 })
 
+app.get('/api/genre', (req, res) => {
+  poolDB.query("Select genre.genre, genre.id from genre", [],
+    function (error, result, fields) {
+      if (error) throw error;
+      res.json(result);
+    })
+})
+
+app.get('/api/language', (req, res) => {
+  poolDB.query("Select language.language, language.id from language", [],
+    function (error, result, fields) {
+      if (error) throw error;
+      res.json(result);
+    })
+})
+
 // In this case, req is an object with all the properties set in UploadVideo.js and function which is calling all the setters 
 // see newVideo() in UploadVideo.js
 app.post('/api/videos', (req, res) => {

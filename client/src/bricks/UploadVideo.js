@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
 export const genres = [
@@ -18,24 +18,53 @@ export const genres = [
   "Other"
 ];
 
-function newVideo(name, genre, link, language, successF, errorF) {
+const defaultFormState = {
+  name: "",
+  selectedGenres: "",
+  link: "",
+  language: ""
+}
+
+function newVideo(formState, successF, errorF) {
   fetch("/api/videos", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ name, genre, link, language }),
+    body: JSON.stringify({ ...formState }),
   }).then((res) => (res.ok ? successF() : errorF(res)));
+}
+
+function getGenre(successF, errorF) {
+  fetch("/api/genre", {
+    method: "GET"
+  }).then((res) => (res.ok ? res.json().then(successF) : errorF(res)));
+}
+
+function getLanguage(successF, errorF) {
+  fetch("/api/language", {
+    method: "GET"
+  }).then((res) => (res.ok ? res.json().then(successF) : errorF(res)));
 }
 
 function UploadVideo({ callBackUpload }) {
   const [hidden, setVisible] = useState(true);
+  const [formState, setFormState] = useState(defaultFormState)
+  const setOnChange = (e) => {
+    let newState = {...formState}
+    const propertyName = e.target.name
+    newState[propertyName] = e.target.value
+    // console.log(formState, newState, propertyName, e.target.value);
+    setFormState(newState)
+  }
 
-  const [name, setName] = useState("");
-  const [link, setLink] = useState("");
-  const [language, setLanguage] = useState("");
+  const [cbValues, setCBvalues] = useState({ genres: [], languages: []})
+  console.log('cbValues',cbValues);
+  useEffect(() => {
+    getGenre((data) => setCBvalues((st) => ({...st, genres: data})), console.log);
+    getLanguage((data) => setCBvalues((st) => ({...st, languages: data})), console.log);
+  }, [])
 
-  const [selectedGenres, setSelectedGenres] = useState(genres[0]);
 
   return (
     <Container>
@@ -50,20 +79,22 @@ function UploadVideo({ callBackUpload }) {
               <Form.Control
                 type="text"
                 placeholder="Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                name="name"
+                value={formState.name}
+                onChange={setOnChange}
               />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicGenre">
               <Form.Label>Genre</Form.Label>
               <Form.Select
-                value={selectedGenres}
-                onChange={(e) => setSelectedGenres(e.target.value)}
+                value={formState.genre}
+                name="genre"
+                onChange={setOnChange}
               >
-                {genres.map((genre, index) => (
-                  <option key={index} value={genre}>
-                    {genre}
+                {cbValues.genres.map((genre, index) => (
+                  <option key={genre.id} value={genre.id}>
+                    {genre.genre}
                   </option>
                 ))}
               </Form.Select>
@@ -74,42 +105,42 @@ function UploadVideo({ callBackUpload }) {
               <Form.Control
                 type="text"
                 placeholder="Link"
-                value={link}
-                onChange={(e) => setLink(e.target.value)}
+                name="link"
+                value={formState.link}
+                onChange={setOnChange}
               />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicLanguage">
               <Form.Label>Language</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Language"
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-              />
+              <Form.Select
+                name="language"
+                value={formState.language}
+                onChange={setOnChange}
+              >
+                {cbValues.languages.map((lang) => (
+                  <option key={lang.id} value={lang.id}>
+                    {lang.language}
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
 
             <Button
               variant="primary"
               type="button"
               disabled={
-                name === "" ||
-                selectedGenres === "" ||
-                link === "" ||
-                language === ""
+                formState.name === "" ||
+                formState.selectedGenres === "" ||
+                formState.link === "" ||
+                formState.language === ""
               }
               onClick={() => {
                 newVideo(
-                  name,
-                  selectedGenres,
-                  link,
-                  language,
+                  formState,
                   // succesF, when sending to server is success, client is calling the function which is calling all the setters
                   () => {
-                    setName("");
-                    setSelectedGenres("");
-                    setLink("");
-                    setLanguage("");
+                    setFormState(defaultFormState)
                     callBackUpload();
                     window.location.reload(true);
                   },
