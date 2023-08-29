@@ -10,19 +10,16 @@ import {
 } from "@mdi/js"; // icons we want to use
 import Col from "react-bootstrap/Col";
 import OkCancelModal from "./Modal";
+import VideoForm from "./VideoForm";
+import { editVideo, removeVideo } from "../API/fetchVideo";
 
-function removeVideo(id, successF, errorF) {
-  fetch("/api/videos", {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ id }),
-  }).then((res) => (res.ok ? successF() : errorF(res)));
-}
 
-function Video({ genre, name, language, link, id, callBackDelete }) {
+
+
+
+function Video({ genre, name, language, link, id, callBackRefresh }) {
   const [show, setShow] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   let imagelink = "https://img.youtube.com/vi/";
 
   if (link.length > 30) {
@@ -56,8 +53,9 @@ function Video({ genre, name, language, link, id, callBackDelete }) {
               Link to video
             </a>
           </Card.Text>
-          <Card.Text className="text-end" onClick={() => setShow(true)}>
-            <Icon path={mdiTrashCanOutline} size={1.1} color="red" />{" "}
+          <Card.Text className="text-end">
+            <Icon path={mdiTrashCanOutline} size={1.1} color="yellow" onClick={() => setShowEdit(true)} />{" "}
+            <Icon path={mdiTrashCanOutline} size={1.1} color="red" onClick={() => setShow(true)} />{" "}
           </Card.Text>
         </Card.Body>
       </Card>
@@ -70,14 +68,25 @@ function Video({ genre, name, language, link, id, callBackDelete }) {
             id,
             // succesF
             () => {
-              callBackDelete();
-              window.location.reload(true);
+              callBackRefresh();
             },
             // errorF
             (res) => console.error(res)
           )
         }
         onCancel={() => setShow(false)}
+      />
+      <OkCancelModal
+        messageTitle="Edit Video"
+        message={<VideoForm callBackUpload={
+          (formData) => {
+            editVideo({...formData, id}, () => { 
+            callBackRefresh()
+            setShowEdit(false)}, console.log)
+          }
+        } formData={{ genre, name, language, link }} />}
+        show={showEdit}
+        onCancel={() => setShowEdit(false)}
       />
     </Col>
   );

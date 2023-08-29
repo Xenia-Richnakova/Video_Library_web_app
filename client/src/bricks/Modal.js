@@ -11,12 +11,8 @@ const OkCancelModal = ({messageTitle, message, show, onOk, onCancel}) => {
             </Modal.Header>
             <Modal.Body>{message}</Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={onCancel}>
-                    Close
-                </Button>
-                <Button variant="primary" onClick={onOk}>
-                    OK
-                </Button>
+                {onCancel && <Button variant="secondary" onClick={onCancel}>Close</Button>}
+                {onOk && <Button variant="primary" onClick={onOk}>OK</Button>}
             </Modal.Footer>
         </Modal>
     )

@@ -94,3 +94,4 @@ export default function NavbarMenu({ onSearch }) {
     </Navbar>
   );
 }
+

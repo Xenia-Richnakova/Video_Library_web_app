@@ -37,8 +37,8 @@ app.get('/api/language', (req, res) => {
     })
 })
 
-// In this case, req is an object with all the properties set in UploadVideo.js and function which is calling all the setters 
-// see newVideo() in UploadVideo.js
+// In this case, req is an object with all the properties set in VideoForm.js and function which is calling all the setters 
+// see newVideo() in VideoForm.js
 app.post('/api/videos', (req, res) => {
   console.log('post');
   if (!validPostVideo(req)) {
@@ -65,7 +65,7 @@ app.delete('/api/videos', (req, res) => {
     res.json({});
   })
 })
-/* 
+
 app.patch('/api/videos', (req, res) => {
   console.log('update');
   if (!validPatchVideo(req)) {
@@ -73,22 +73,14 @@ app.patch('/api/videos', (req, res) => {
     return
   }
   const id = req.body.id
-  let wasUpdated = false
-  for (let i = 0; i < videos.videosList.length; i++) {
-    if (id === videos.videosList[i].id) {
-      videos.videosList[i] = { ...videos.videosList[i], ...req.body }
-      wasUpdated = true
-      break
-    }
-  }
-
-  if (!wasUpdated) {
-    res.status(400).send({ message: "ID was not found" })
-    return
-  }
-  saveDB(videos)
-  res.send(videos.videosList)
-}) */
+  let r = req.body
+  poolDB.query("UPDATE `video` SET `name`=?,`link`=?,`genre_id`=?,`language_id`=? WHERE id = ?", [r.name, r.link, r.genre, r.language, id],
+  function (error, result, fields) {
+    if (error) throw error;
+    res.json({});
+  })
+  
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

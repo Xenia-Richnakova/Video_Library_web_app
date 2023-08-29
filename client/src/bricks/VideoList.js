@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
 import Video from "./Video";
 import Row from 'react-bootstrap/Row';
-import {useState} from "react"
-import UploadVideo from "./UploadVideo";
+import { useState } from "react"
+import VideoForm, { defaultFormState } from "./VideoForm";
+import { HiddeComponent } from "./HiddeComponent";
+import { newVideo } from "../API/fetchVideo";
 
 
 // calling server to get DB_video.json
-function getVideoList(filterCriteria , callBack) {
-  fetch("/api/videos?" + new URLSearchParams({filterCriteria }).toString(), {
+function getVideoList(filterCriteria, callBack) {
+  fetch("/api/videos?" + new URLSearchParams({ filterCriteria }).toString(), {
     method: "GET"
   })
     // I get all videos from res in string form and converting it to json (array)
@@ -16,38 +18,49 @@ function getVideoList(filterCriteria , callBack) {
     .then((data) => callBack(data)) // => .then((data) => setVideoList(data))
 }
 
-function VideoList({searchCriteria}) {
+function VideoList({ searchCriteria }) {
   const [videoList, setVideoList] = useState([])
   const [refreshCount, setRefreshCount] = useState(0)
-  useEffect(() => getVideoList(searchCriteria , setVideoList), [searchCriteria, refreshCount ])
+  useEffect(() => getVideoList(searchCriteria, setVideoList), [searchCriteria, refreshCount])
 
-   
-    return (
-      <div>
+
+  return (
+    <div>
       <div>
         <Row>
-          <UploadVideo callBackUpload={() =>  setRefreshCount(refreshCount+1) }/>
+          <HiddeComponent showLabel="Upload" hideLabel="Cancel">
+            <VideoForm
+              formData={defaultFormState}
+              callBackUpload={(formData, setHide) => {
+                newVideo(formData, () => { 
+                  setRefreshCount(refreshCount + 1);
+                  setHide(true);
+                },
+                  console.log)
+
+              }} />
+          </HiddeComponent>
         </Row>
-        </div>
-        <div >
+      </div>
+      <div >
         <Row xs={2} md={4} lg={5} className="g-4 flex-wrap justify-content-center ps-4 pe-3">
           {videoList
-            .map((video) => 
-            <Video 
-              key={video.id} 
-              genre={video.genre} 
-              link={video.link} 
-              name={video.name} 
-              language={video.language}
-              id={video.id}
-              callBackDelete={() => setRefreshCount(refreshCount+1)}
-            />)}
+            .map((video) =>
+              <Video
+                key={video.id}
+                genre={video.genre}
+                link={video.link}
+                name={video.name}
+                language={video.language}
+                id={video.id}
+                callBackRefresh={() => setRefreshCount(refreshCount + 1)}
+              />)}
         </Row>
       </div>
-      </div>
-    );
+    </div>
+  );
 
- 
+
 }
 export default VideoList;
 
